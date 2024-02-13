@@ -2,9 +2,11 @@ import requests
 from fake_useragent import UserAgent
 from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor
-from xl import create_base_file, add_team
+from xl import create_base_file, add_teams
 from proxy import random_proxy
 import time
+
+url = "https://www.hltv.org/ranking/teams/2024/february/5"
 
 def fake_headers():
     ua = UserAgent()
@@ -39,13 +41,13 @@ def get_player_info(url):
             age = bs4.find("div", class_="playerInfoRow playerAge").find("span", itemprop="text").text.replace(" years", '')
             return player(nickname, name, age, country, url)
         except Exception as err:
-            print(str(err))
+            print(f"Second request: {(str(err))}")
             time.sleep(1)
 
 start = time.time()
 while True:
     try:
-        responce = requests.get(url="https://www.hltv.org/ranking/teams/2024/february/5", headers=fake_headers(), proxies=random_proxy()).text
+        responce = requests.get(url=url, headers=fake_headers(), proxies=random_proxy()).text
         bs4 = BeautifulSoup(responce, 'lxml')
         with open('output.html', 'w', encoding='utf-8') as file:
             file.write(str(bs4))
@@ -53,9 +55,9 @@ while True:
         arr_teams = []
         if teams != []:
             break
-        print("Unluck-3")
-    except:
-        print("Unluck")
+        print("Empty request")
+    except Exception as err:
+        print(f"First request: {(str(err))}")
         time.sleep(1)
 
 for i, team in enumerate(teams):
@@ -70,7 +72,7 @@ for i, team in enumerate(teams):
 
 
 create_base_file()
-add_team(arr_teams)
+add_teams(arr_teams)
 end = time.time()
 total = end-start
-print(f"Время выполнения: {int(total // 3600)}:{int((total % 3600) // 60)}:{int(total % 60)}")
+print(f"Code execution time: {int(total // 3600)}:{int((total % 3600) // 60)}:{int(total % 60)}")

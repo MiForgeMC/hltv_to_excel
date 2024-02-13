@@ -21,7 +21,7 @@ def create_base_file():
 
     book.save("teams.xlsx")
 
-def add_team(arr_teams):
+def add_teams(arr_teams):
     book = openpyxl.load_workbook(filename="teams.xlsx")
     sh = book.active
     row = 1
